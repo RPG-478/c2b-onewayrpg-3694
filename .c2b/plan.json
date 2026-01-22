@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "session_id": "1301416493401243694_b37189da",
+  "project_name": "OneWayRPG",
+  "theme": "一方通行のローグライクRPG Bot",
+  "status": "done",
+  "tasks": [
+    {
+      "id": "spec",
+      "title": "仕様の確定",
+      "status": "done"
+    },
+    {
+      "id": "catalog",
+      "title": "コマンドカタログ生成",
+      "status": "done"
+    },
+    {
+      "id": "planner",
+      "title": "設計(Planner)",
+      "status": "done"
+    },
+    {
+      "id": "architect",
+      "title": "コード生成(Architect)",
+      "status": "done"
+    },
+    {
+      "id": "validator",
+      "title": "品質チェック(Validator)",
+      "status": "done"
+    },
+    {
+      "id": "auditor",
+      "title": "安全チェック(Auditor)",
+      "status": "done"
+    },
+    {
+      "id": "sandbox",
+      "title": "簡易テスト(Sandbox)",
+      "status": "done"
+    },
+    {
+      "id": "package",
+      "title": "ZIP作成",
+      "status": "done"
+    }
+  ]
+}
