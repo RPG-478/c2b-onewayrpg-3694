@@ -1,0 +1,169 @@
+{
+  "project_name": "OneWayRPG",
+  "theme": "一方通行のローグライクRPG Bot",
+  "description": "Discordのプライベートスレッド内で遊べる、ソロプレイ専用の一方通行ローグライクRPGボットです。プレイヤーはコマンドを使ってダンジョンをひたすら進み、10000m踏破を目指します。道中ではランダムなイベントが発生し、敵との戦闘や宝箱の発見などを通じてキャラクターを強化していきます。戦闘はEmbedを利用したポケモン風のターン制バトルで、シンプルながらも戦略的な判断が求められます。",
+  "goal": "ユーザーがDiscord上で手軽に、かつ没入感のあるソロRPG体験を楽しめるボットを提供する。プライベートスreadを活用することで、他のユーザーを気にすることなく自分のペースで冒険を進められる環境を実現する。",
+  "features": [
+    "プライベートスレッドでのゲームプレイ: `/start`コマンドでプレイヤー専用のプライベートスレッドを生成し、ゲームを開始する。",
+    "一方通行の進行システム: `!m`コマンドで前進し、後戻りはできない。進む距離に応じてイベントの難易度が上昇する。",
+    "ランダムイベント生成: 進行中に「敵との遭遇」「宝箱の発見」「ストーリーテキスト」などのイベントがランダムで発生する。",
+    "Embedによるターン制バトル: 敵と遭遇すると、HPや状況が分かりやすく表示されたEmbedで戦闘が進行する。",
+    "シンプルなキャラクターシステム: キャラクターはHP・ATK・DEFの3つのステータスを持つ。",
+    "装備品による強化: 宝箱や敵からのドロップで武器や防具を入手し、キャラクターを強化する。",
+    "インベントリ管理: コマンドで所持品一覧の確認や装備の付け替えが可能。",
+    "パーマデス（ローグライク要素）: HPが0になるとゲームオーバーとなり、進行状況はリセットされ、最初からやり直しとなる。"
+  ],
+  "commands": [
+    {
+      "name": "start",
+      "display_name": "/start",
+      "description": "新しい冒険を開始し、専用のプライベートスレッドを作成します。",
+      "category": "ゲーム",
+      "command_type": "slash",
+      "parameters": [],
+      "example": "/start"
+    },
+    {
+      "name": "m",
+      "display_name": "!m",
+      "description": "ダンジョンを前進します。ランダムなイベントが発生します。",
+      "category": "ゲーム",
+      "command_type": "prefix",
+      "parameters": [],
+      "example": "!m"
+    },
+    {
+      "name": "attack",
+      "display_name": "!attack",
+      "description": "戦闘中に敵を攻撃します。",
+      "category": "戦闘",
+      "command_type": "prefix",
+      "parameters": [],
+      "example": "!attack"
+    },
+    {
+      "name": "item",
+      "display_name": "!item",
+      "description": "戦闘中にアイテムを使用します。",
+      "category": "戦闘",
+      "command_type": "prefix",
+      "parameters": [
+        {
+          "name": "item_name",
+          "type": "str",
+          "description": "使用するアイテムの名前。",
+          "required": true
+        }
+      ],
+      "example": "!item 回復ポーション"
+    },
+    {
+      "name": "run",
+      "display_name": "!run",
+      "description": "戦闘から逃走を試みます。失敗することもあります。",
+      "category": "戦闘",
+      "command_type": "prefix",
+      "parameters": [],
+      "example": "!run"
+    },
+    {
+      "name": "inventory",
+      "display_name": "!inventory",
+      "description": "所持しているアイテムと現在装備中のアイテム一覧を表示します。",
+      "category": "キャラクター",
+      "command_type": "prefix",
+      "parameters": [],
+      "example": "!inventory"
+    },
+    {
+      "name": "equip",
+      "display_name": "!equip",
+      "description": "所持している装備品を装備します。",
+      "category": "キャラクター",
+      "command_type": "prefix",
+      "parameters": [
+        {
+          "name": "equipment_name",
+          "type": "str",
+          "description": "装備するアイテムの名前。",
+          "required": true
+        }
+      ],
+      "example": "!equip 鉄の剣"
+    },
+    {
+      "name": "status",
+      "display_name": "!status",
+      "description": "現在のキャラクターのステータス（HP, ATK, DEF）と進行距離を表示します。",
+      "category": "キャラクター",
+      "command_type": "prefix",
+      "parameters": [],
+      "example": "!status"
+    }
+  ],
+  "persistence": "SQLite",
+  "persistence_details": "Python標準ライブラリの`sqlite3`を使用し、`database.db`というファイル名でデータを管理する。プレイヤーデータはユーザーIDをキーに保存し、複数のユーザーが同時にプレイしても競合しないようにする。テーブル構成は `players` (user_id, thread_id, current_hp, max_hp, atk, def, distance, in_battle), `inventory` (user_id, item_name, item_type, quantity, is_equipped) などを想定する。",
+  "external_apis": [],
+  "dependencies": [
+    {
+      "package": "discord.py",
+      "version": "2.3.2",
+      "purpose": "Discord Botを動作させるための主要ライブラリ。"
+    },
+    {
+      "package": "python-dotenv",
+      "version": "1.0.1",
+      "purpose": "環境変数（.envファイル）を管理し、Botトークンなどの機密情報を安全に扱うため。"
+    }
+  ],
+  "env_vars": [
+    "DISCORD_BOT_TOKEN"
+  ],
+  "constraints": [
+    "discord.py 2.x以上を使用する。",
+    "ゲームはプライベートスレッド内でのみ進行する。",
+    "ソロプレイ専用とする。",
+    "キャラクターの強化は装備品によってのみ行われる。",
+    "認証情報（Botトークン）はソースコードにハードコードしない。"
+  ],
+  "non_goals": [
+    "マルチプレイヤー機能。",
+    "スキルや魔法などの複雑な戦闘システム。",
+    "アイテムのクラフト機能。",
+    "プレイヤー間のアイテム交換や対戦機能。",
+    "GUIベースの操作画面。"
+  ],
+  "assumptions": [
+    "ボットはメッセージの送受信、スレッドの作成・管理に必要な権限を付与されている。",
+    "ユーザーはコマンドを実行するチャンネルでプライベートスレッドを作成する権限を持っている。",
+    "ゲームデータはサーバーごとではなく、ユーザーのDiscord IDに紐づけて管理する。"
+  ],
+  "implementation_notes": [
+    {
+      "topic": "discord.py 2.x のセットアップ",
+      "note": "discord.py 2.xでは`Intents`の指定が必須。メッセージ内容を読み取るために`Intents.message_content`を有効にする必要がある。Botのセットアップ時に `intents = discord.Intents.default(); intents.message_content = True` のように設定する。",
+      "source": "discord.py公式ドキュメント"
+    },
+    {
+      "topic": "コマンドの整理（Cogs）",
+      "note": "コマンドが増えるため、機能ごと（例: `game_logic.py`, `battle.py`, `character.py`）にファイルを分割し、`Cogs`として管理することが推奨される。これによりコードの可読性と保守性が向上する。",
+      "source": "discord.pyのベストプラクティス"
+    },
+    {
+      "topic": "プライベートスレッドの管理",
+      "note": "`/start`コマンド実行時に `message.create_thread(name=f'{ctx.author.name}の冒険', auto_archive_duration=1440)` のようにしてスレッドを作成する。作成したスレッドIDとユーザーIDをデータベースに保存し、以降のプレフィックスコマンドはそのスレッド内でのみ受け付けるように制御する。",
+      "source": "discord.py公式ドキュメント"
+    },
+    {
+      "topic": "ゲーム状態の管理",
+      "note": "戦闘中かどうか、どの敵と戦っているかなどの状態をデータベースで管理する。各コマンド実行時に現在の状態を確認し、適切な処理（例: 戦闘中でなければ`!attack`は無効）を行う必要がある。",
+      "source": "一般的なゲームプログラミングの設計パターン"
+    },
+    {
+      "topic": "Embedの活用",
+      "note": "戦闘画面では`discord.Embed`を積極的に使用する。`add_field`メソッドでHP、ATK、DEFなどのステータスを並べ、`set_image`で敵の画像を（もし用意するなら）表示し、`set_footer`でターン数やヒントを表示するとリッチなUIになる。",
+      "source": "discord.pyのサンプルコードやコミュニティ"
+    }
+  ],
+  "user_request": "Discordのプライベートスレッドで遊べる、一方通行のローグライクRPGボットを作成したい。`!m`コマンドで前進し、ランダムなイベント（敵、宝箱、ストーリー）が発生する。戦闘はEmbedを使ったポケモン方式のターン制バトル。キャラクターはHP・ATK・DEFを持ち、装備品で強化する。10000m踏破が目標のソロプレイゲーム。"
+}
